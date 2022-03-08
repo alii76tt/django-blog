@@ -1,0 +1,84 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title %} Home | {{ settings.title }} {% endblock %}
+{% block keywords %}{{ settings.keywords }}{% endblock %}
+{% block description %}{{ settings.description }}{% endblock %}
+{% block icon %}{{ settings.icon.url }}{% endblock %}
+{% block content %}
+{% include 'base/left-box.html' %}
+<style>
+    .card-img-top {
+        height: 12vw;
+        object-fit: cover;
+    }
+
+    .image:hover {
+        opacity: 0.3;
+    }
+    
+    @media screen and (max-device-width: 800) {
+        .card-img-top {
+            width: 100%;
+            height:29vw;
+        }
+      }
+
+    
+</style>
+    <div class="col-lg-9 mt-3">
+        {% include 'base/message.html' %}
+        <div class="row">
+            {% for post in posts %}
+            <div class="col-md-4 mt-3">
+                <div class="card">
+                    <a href="{{post.get_absoulte_url}}"><img src="{% if post.image %}{{post.image.url}} {% else %} {% static 'images/placeholder.png' %} {% endif %}" alt="" class="card-img-top image"></a>
+                    <div class="card-body">
+                        <h4 class="card-title">
+                            <a href="{{post.get_absoulte_url}}">{{post.title}}</a>
+                        </h4>
+                        <smal class="text-muted">
+                            {{post.user.get_full_name}}
+                        </smal>
+                        <span class="text-muted ms-1">
+                            {{post.publishing_date|timesince}} ago
+                        </span>
+                        {% if request.user.is_authenticated %}
+                            <a href="/admin/post/post/{{post.id}}/change/" class="btn-warning btn btn-sm"> Update</a>
+                            <a href="{{post.get_delete_url}}" class="btn-danger btn btn-sm float-right"> Delete</a>
+                            <a href="/admin/post/post/add/" class="btn-primary btn btn-sm float-right"> Create</a>
+                        {% endif %}
+                        <p class="card-text pt-2">
+                            {% autoescape off %}
+                            {{post.content|truncatechars:80}}
+                            {% endautoescape %}
+                        </p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{{post.get_absoulte_url}}" class="btn-success btn btn-sm"> Read More</a>
+                        <span class="text-muted ms-5">
+                            {{post.category.name}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!--Pagination-->
+        <div class="pagination mt-3">
+            <span class="step-links">
+                {% if posts.has_previous %}
+                    <a href="?page={{ posts.previous_page_number }}{% if request.GET.q %}&q={{request.GET.q}}{% endif %}">previous</a>
+                {% endif %}
+                <span class="current">
+                    Page {{ posts.number }} of {{ posts.paginator.num_pages }}.
+                </span>
+                {% if posts.has_next %}
+                    <a href="?page={{ posts.next_page_number }}{% if request.GET.q %}&q={{request.GET.q}}{% endif %}">next</a>
+                {% endif %}
+            </span>
+        </div>
+        <!--end of Pagination-->
+    </div>
+{% endblock content %}
+

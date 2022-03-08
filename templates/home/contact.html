@@ -1,0 +1,52 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title %} Contact | {{ settings.title }} {% endblock %}
+{% block keywords %}{{ settings.keywords }}{% endblock %}
+{% block description %}{{ settings.description }}{% endblock %}
+{% block icon %}{{ settings.icon.url }}{% endblock %}
+{% block content %}
+{% include 'base/left-box.html' %}
+    <div class="col-lg-9">
+        <div class="row">
+            <div class="col-md-12">
+                <img src="{% static 'images/contact.png' %}" class="rounded mx-auto d-block" alt="...">
+
+                <h4 class="card-title text-center">Contact Us</h4>
+                <div class="container text-center">
+                    <a href="https://twitter.com/alii76tt" target="_blank" class="btn btn-lg btn-block btn-social btn-twitter" style="color:rgb(18, 142, 214)">
+                        <span class="fa fa-twitter"></span>
+                    </a>
+                    <a href="https://github.com/alii76tt" target="_blank" class="btn btn-lg btn-block btn-social btn-github">
+                        <span class="fa fa-github"></span>
+                    </a>
+                    <a href="https://github.com/alii76tt" target="_blank" class="btn btn-lg btn-block btn-social btn-instagram" style="color:rgb(224, 0, 0)">
+                        <span class="fa fa-instagram"></span>
+                    </a>
+                </div>
+               
+            </div>
+            <div class="col-md-12">
+                <div class="row mt-3">
+                    <hr>
+                    {% include 'base/message.html' %}
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label">Name</label>
+                            {{form.name}}
+                          </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email address</label>
+                            {{form.email}}
+                          </div>
+                        <div class="mb-3">
+                            <label class="form-label">Message</label>
+                            {{form.message}}
+                        </div>
+                        <button type="submit" class="btn btn-success">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

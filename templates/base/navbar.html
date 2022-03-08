@@ -1,0 +1,40 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand" href="/">{{settings.title}}</a>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item {% if '/' in request.path %}active{% endif %}">
+          <a class="nav-link" href="{% url 'home:home' %}">Home</a>
+        </li>
+        <li class="nav-item {% if 'about' in request.path %}active{% endif %}">
+          <a class="nav-link" href="{% url 'home:about' %}">About</a>
+        </li>
+        <li class="nav-item {% if 'contact' in request.path %}active{% endif %}">
+          <a class="nav-link" href="{% url 'home:contact' %}">Contact</a>
+        </li>
+        {% if request.user.is_authenticated %}
+        <li class="nav-item">
+          <a href="{% url 'admin:index' %}" class="nav-link">Welcome {{request.user.get_full_name}}</a>
+        </li>
+        <li class="nav-item">
+          <a href="{% url 'admin:index' %}" class="nav-link">Admin Panel</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'account:logout' %}">Logout</a>
+        </li>
+      {% else %}
+        <li class="nav-item {% if 'login' in request.path %}active{% endif %}">
+            <a class="nav-link" href="{% url 'account:login' %}">Login</a>
+        </li>
+      {% endif %}
+      </ul>
+      <form class="d-flex" action="/" role="search" method="GET">
+        <input class="form-control me-2" name="q" value="{{request.GET.q}}" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-info" type="submit">Search</button>
+      </form>
+    </div>
+  </div>
+</nav>

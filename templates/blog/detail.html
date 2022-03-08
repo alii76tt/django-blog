@@ -1,0 +1,80 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title %} {{post.title}} | {{ settings.title }} {% endblock %}
+{% block keywords %}{{post.content|truncatechars:70}}{% endblock %}
+{% block description %}{{ settings.description }}{% endblock %}
+{% block icon %}{{ settings.icon.url }}{% endblock %}
+{% block content %}
+<style>
+    .img-thumbnail {
+    width: 100%;
+    height: 40vw;
+    object-fit: cover;
+    }
+</style>
+{% include 'base/left-box.html' %}
+<div class="col-lg-9 mt-3">
+    <div class="row">
+        <div class="com-md-12">
+            {% if request.user.is_authenticated %}
+                <a href="/admin/post/post/{{post.id}}/change/" class="btn-warning btn btn-sm"> Update</a>
+                <a href="{{post.get_delete_url}}" class="btn-danger btn btn-sm float-right"> Delete</a>
+                <a href="/admin/post/post/add/" class="btn-primary btn btn-sm float-right"> Create</a>
+            {% endif %}
+            <img src="{{post.image.url}}" class="img-thumbnail" alt="...">
+            <h4>{{post.title}}</h4>
+            <smal class="text-muted">
+                {{post.user.get_full_name}}
+            </smal>
+            <span class="text-muted ms-1">
+                {{post.publishing_date|timesince}} ago
+            </span>
+            <p>{{post.content|safe}}</p>
+            <br>
+            <h5>Category: <a href="{{post.category.get_absoulte_url}}">{{post.category.name}}</a></h5>
+            <h5>Tags: {% for tag in post.tags.all %}
+                <a href="{{tag.get_absoulte_url}}">{{tag.name}}, </a>{% endfor %}
+            </h5>
+
+
+        </div>
+        <div class="col-md-12">
+            <h4>Comments ({{post.comments.count}})</h4>
+            {% include 'base/message.html' %}
+            <hr>
+            <div class="list-group">
+                {% for comment in post.comments.all %}
+                <small class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">{{comment.name}}</h5>
+                        <small>{{comment.date_added|timesince}} ago</small>
+                    </div>
+                    <p class="mb-1">{{comment.comment}}</p>
+                </small>
+                {% endfor %}
+            </div>
+
+            <div class="container pt-3">
+                <h4>Add Your Comment</h4>
+                <hr>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">Name</label>
+                        {{form.name}}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email address</label>
+                        {{form.email}}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Message</label>
+                        {{form.comment}}
+                    </div>
+                    <button type="submit" class="btn btn-info">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
